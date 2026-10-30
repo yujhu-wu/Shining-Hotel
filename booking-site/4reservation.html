@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shining Hotel - Reservation</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    #price-calculation {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #reservation .btn2 {
+    display: inline-block;
+    padding: 15px 30px;
+    margin-top: 20px;
+    background-color: rgb(94, 120, 200);
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 20px;
+  }
+
+  #reservation .btn2:hover {
+    background-color: #eee;
+    color: rgb(94, 120, 200);
+    transition: 0.7s;
+  }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var checkInInput = document.getElementById("check-in");
+      var checkOutInput = document.getElementById("check-out");
+  
+      var calculateButton = document.getElementById("calculate-button");
+      var priceCalculationDiv = document.getElementById("price-calculation");
+  
+      // 將入住的最短日期設為目前日期
+      var currentDate = new Date();
+      var currentDateString = currentDate.toISOString().split('T')[0];
+      checkInInput.min = currentDateString;
+  
+      // 入住變更時更新最晚退房日期
+      checkInInput.addEventListener("input", function () {
+        checkOutInput.min = getTomorrowDate(checkInInput.value);
+      });
+  
+      function getTomorrowDate(dateString) {
+        var currentDate = new Date(dateString);
+        currentDate.setDate(currentDate.getDate() + 1);
+        return currentDate.toISOString().split('T')[0];
+      }
+  
+      calculateButton.addEventListener("click", function () {
+        // 選擇房間、住幾晚
+        var roomSelect = document.getElementById("room-number");
+        var selectedRoom = roomSelect.options[roomSelect.selectedIndex].value;
+        var numberOfNights = (new Date(checkOutInput.value) - new Date(checkInInput.value)) / (1000 * 60 * 60 * 24);
+  
+        // 計算總價
+        var roomCost = 0;
+        switch (selectedRoom) {
+          case "301":
+          case "302":
+          case "304":
+            roomCost = 9000;
+            break;
+          case "303":
+          case "305":
+            roomCost = 10000;
+            break;
+        }
+  
+        var totalCost = roomCost * numberOfNights;
+  
+        // 顯示計算出的總價並顯示隱藏的div
+        document.getElementById("total-price").textContent = "Total Price: " + totalCost + " NT$";
+        priceCalculationDiv.style.display = "block";
+      });
+    });
+  </script>
+  
+</head>
+
+<body>
+
+  <header>
+    <h1><a href="index.html">Shining Hotel</a></h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="2rooms.html">Rooms</a></li>
+        <li><a href="3facilities.html">Facilities</a></li>
+        <li><a href="4reservation.html">Reservation</a></li>
+        <li><a href="5contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="reservation" class="reservation">
+    <h2>Reservation</h2>
+    <p>Book your stay with us!</p>
+    <p>每個房間最多上限入住兩人，若有多人入住則需<b>分次預訂房間</b>，如有其他特殊需求請聯絡客服，謝謝您!</p>
+    <form action="/reservation" method="post">      
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    
+      <label for="contact-phone">Contact Phone:</label>
+      <input type="tel" id="contact-phone" name="contactPhone" required>
+    
+      <label for="email">E-MAIL:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="check-in">Check-in Date:</label>
+      <input type="date" id="check-in" name="checkIn" required>
+
+      <label for="check-out">Check-out Date:</label>
+      <input type="date" id="check-out" name="checkOut" required>
+
+      <label for="guests">Number of Guests (入住人數最多輸入2人):</label>
+      <input type="number" id="guests" name="guests" min="1" max="2" required>
+
+      <label for="room-number">Select Room:</label>
+      <select id="room-number" name="roomNumber" required>
+        <option value="301">301</option>
+        <option value="302">302</option>
+        <option value="303">303</option>
+        <option value="304">304</option>
+        <option value="305">305</option>
+      </select>
+
+      <p>請務必於<b>提交預約訂單的當天內</b>成功轉帳付款，若無法確認款項將取消該筆訂房預約，謝謝您的配合。</p>
+      <p>點按下方計算按鈕查看當前訂單金額，<b>輸入您的轉帳資訊</b>以便資料核對，並轉帳到下方銀行帳戶：</p>
+      <p><b>中國信託 822 - 987654321230</b></p>
+      <button type="button" id="calculate-button" class="btn">Calculate Total Price / Payment</button>
+      <div id="price-calculation">
+        <p id="total-price"></p>
+        <label for="bank">Bank 轉帳銀行代碼 (三位數字):</label>
+        <input type="text" id="bank" name="bank" pattern="\d{3}" title="請輸入三位數字" required>        
+
+        <label for="account-number">Account Number (銀行轉帳帳號後五碼數字):</label>
+        <input type="text" id="account-number" name="accountNumber" pattern="\d{5}" title="請輸入五位數字" required>
+        
+      </div>
+
+      <button type="submit" class="btn">Submit Reservation</button>
+    </form>
+  </section>
+
+  <section id="reservation">
+     <a href="reservation-success.html" class="btn2">點此可查詢、更改或刪除已提交預定的訂單</a>
+  </section>
+
+  <section id="contact" class="contact">
+    <p>Service time: Mon-Fri 09:00-17:00</p>
+    <p>客服電話：(02)2905-3030</p>
+    <p>shininghotel@gmail.com</p>
+    <p><address>地址　|　台南市安平區漁光路 119 巷 1 號</address></p>
+    <p><address> No.1, Ln. 119, Yuguang Rd., Anping Dist., Tainan City 708</address></p>
+
+  </section>
+
+  <footer>
+    <p>&copy; 2023 Shining Hotel. All rights reserved.</p>
+    <p>Designed by Wu Yu Ju.</p>
+  </footer>
+
+</body>
+</html>

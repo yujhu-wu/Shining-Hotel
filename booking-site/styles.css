@@ -1,0 +1,360 @@
+body {
+  font-family: 'Georgia', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+header {
+  background-color: #e4b636;
+  color: #fff;
+  padding: 1em;
+  text-align: center;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav li {
+  display: inline;
+  margin-right: 10px;
+}
+
+a {
+  text-decoration: none;
+  color: #000000;
+}
+
+body {
+  padding-top: 90px;
+  margin: 0;  
+}
+/* 下拉選單 */
+nav ul ul {
+ display: none;
+ position: absolute;
+ top: 100%;
+ left: 0;
+ margin-top: 0; 
+ background-color: #eee;
+ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+nav ul li {
+  position: relative;
+}
+
+nav ul li:hover > ul {
+  display: block;
+}
+
+nav ul ul li {
+  float: none;
+  width: 100%;
+  text-align: left;
+}
+
+nav ul ul a {
+  padding: 10px;
+  color: #333;
+  text-decoration: none;
+  display: block;
+}
+
+nav ul ul a:hover {
+  background-color: #f5f5f5;
+}
+/* home.html css */
+.hero {
+  background: url('image/hotel.jpg') center/cover no-repeat;
+  color: #000000;
+  text-align: center;
+  padding: 4em 1em; 
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: -250px auto 0;
+}
+
+.btn {
+  display: inline-block;
+  padding: 15px 30px;
+  margin-top: 20px;
+  background-color: #e4b636;
+  color: #000000;
+  text-decoration: none;
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+.btn:hover {
+  background-color:#000000;
+  color: #e4b636;
+  transition: 0.7s;
+}
+
+#about,
+#about-translate {
+text-align: center;
+padding: 2em 1em;
+}
+
+#about h2,
+#about-translate h2 {
+margin-bottom: 20px;
+
+}
+
+.story,
+.story-translate {
+max-width: 800px;
+margin: 0 auto;
+text-align: justify;
+font-family: 'Comic Sans MS';
+}
+
+#about-translate h2,
+.story-translate {
+font-family: 'DFKai-SB';
+}
+
+#hotelpic {
+background-color: #eee;
+text-align: center;
+padding: 2em 1em;
+overflow: hidden;
+}
+
+.carousel-container {
+display: flex;
+width: 400%;
+animation: scroll 50s linear infinite;
+}
+
+.carousel-slide {
+width: 10%;
+flex-shrink: 0;
+}
+
+
+img {
+width: 100%;
+height: 100%;
+}
+
+@keyframes scroll {
+0% {
+  transform: translateX(0);
+}
+100% {
+  transform: translateX(-100%);
+}
+}
+
+
+/* rooms.html css */
+.rooms {
+  text-align: center;
+  padding: 2em 1em;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center; 
+}
+
+.room {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 1em;
+  border: 1px solid #f5f5f5;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  background-color: #f5f5f5;
+}
+
+.room img {
+  max-width: 100%;
+  height: auto;
+}
+
+.section-title {
+  width: 100%;
+}
+
+.room30{
+  background-color: #ffffff;
+  text-align: center;
+  padding: 2em 1em;
+}
+
+#room30 ul {
+  background-color: #eee;
+  text-align: center; 
+  list-style-type: none; 
+  padding: 50; 
+}
+
+.image-grid {
+  
+  justify-content: space-between;
+  align-items: center;
+}
+
+.image-grid img {
+  max-width: 50%;
+  height: auto;
+  margin: 10px;
+}
+
+
+/* facilities.html css */
+.facilities {
+  text-align: center;
+  padding: 2em 1em;
+}
+
+.facility-description {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.facility {
+  text-align: center;
+  margin: 20px;
+}
+
+.facility img {
+  width: 50px;
+  height: 40px; 
+  margin-bottom: 10px;
+}
+
+.facilities3 {
+  background-color: #eee;
+  text-align: center;
+  padding: 2em 1em;
+  font-family: 'DFKai-SB'
+}
+
+.facilities3 ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.facilities3 li {
+  display: inline;
+  margin-right: 20px;
+}
+
+
+
+/* reservation.html css */
+#reservation {
+  text-align: center;
+  padding: 2em 1em;
+}
+
+#reservation h2 {
+  margin-bottom: 20px;
+}
+
+#reservation form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+#reservation label,
+#reservation input,
+#reservation select,
+#reservation textarea {
+  display: block;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+#reservation button {
+  display: inline-block;
+  padding: 15px 30px;
+  margin-top: 20px;
+  background-color: #e4b636;
+  color: #000000;
+  text-decoration: none;
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+#reservation button:hover {
+  background-color:#000000;
+  color: #e4b636;
+  transition: 0.7s;
+}
+
+
+/* contact.html css */
+.contact {
+  text-align: center;
+  padding: 2em 1em;
+}
+
+.contact form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.contact label,
+.contact input,
+.contact textarea {
+  display: block;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+
+/* footer css */
+footer {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 1em;
+}
+
+.success {
+  background-color: #eee;
+  color: rgb(94, 120, 200);
+  text-align: center;
+  padding: 2em 1em;
+}
+
+#search {
+  color: rgb(0, 0, 0);
+  text-align: center;
+  padding: 2em 1em;
+}
+
+#search form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+#search label,
+#search input,
+#search select {
+  display: block;
+  margin-bottom: 10px;
+  width: 100%;
+}

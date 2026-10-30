@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reservation - Success</title>
+  <style>
+    body {
+      font-family: 'Georgia', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    header {
+      background-color: #e4b636;
+      color: #fff;
+      padding: 1em;
+      text-align: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    nav li {
+      display: inline;
+      margin-right: 10px;
+    }
+
+    a {
+      text-decoration: none;
+      color: #000000;
+    }
+
+    body {
+      padding-top: 90px;
+      margin: 0;  
+    }
+    /* 下拉選單 */
+    nav ul ul {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0; 
+    background-color: #eee;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    nav ul li {
+      position: relative;
+    }
+
+    nav ul li:hover > ul {
+      display: block;
+    }
+
+    nav ul ul li {
+      float: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    nav ul ul a {
+      padding: 10px;
+      color: #333;
+      text-decoration: none;
+      display: block;
+    }
+
+    nav ul ul a:hover {
+      background-color: #f5f5f5;
+    }
+
+    .contact {
+      text-align: center;
+      padding: 2em 1em;
+    }
+
+    .contact form {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .contact label,
+    .contact input,
+    .contact textarea {
+      display: block;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 1em;
+    }
+    .success {
+      background-color: #eee;
+      color: rgb(94, 120, 200);
+      text-align: center;
+      padding: 2em 1em;
+    }
+
+    #search {
+      color: rgb(0, 0, 0);
+      text-align: center;
+      padding: 2em 1em;
+    }
+
+    #search form {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    #search label,
+    #search input,
+    #search select {
+      display: block;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+    .btn {
+      display: inline-block;
+      padding: 5px 15px;
+      margin-top: 20px;
+      background-color: #e4b636;
+      color: #000000;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 20px;
+    }
+
+    .btn:hover {
+      background-color:#000000;
+      color: #e4b636;
+      transition: 0.7s;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1><a href="/index.html">Shining Hotel</a></h1>
+    <nav>
+        <ul>
+            <li><a href="/index.html">Home</a></li>
+            <li><a href="/2rooms.html">Rooms</a></li>
+            <li><a href="/3facilities.html">Facilities</a></li>
+            <li><a href="/4reservation.html">Reservation</a></li>
+            <li><a href="/5contact.html">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+  <section id="success" class="success">
+    <h2>Reservation Successful!</h2>
+    <p>Thank you for booking with Shining Hotel.</p>
+    <p>Your reservation has been successfully submitted!</p>
+  </section>
+
+  <section id="search" class="search">
+    <h2>Search/Edit/Delete Reservation Record</h2>
+    <form action="/search" method="post">
+      <label for="search-phone">Contact Phone:</label>
+      <input type="tel" id="search-phone" name="search-phone" required>
+
+      <label for="search-email">Email:</label>
+      <input type="email" id="search-email" name="search-email" required>
+
+      <button type="submit" class="btn">Search</button>
+    </form>
+  </section>
+
+  
+
+  <section id="contact" class="contact">
+    <p>Service time: Mon-Fri 09:00-17:00</p>
+    <p>客服電話：(02)2905-3030</p>
+    <p>shininghotel@gmail.com</p>
+    <p><address>地址　|　台南市安平區漁光路 119 巷 1 號</address></p>
+    <p><address> No.1, Ln. 119, Yuguang Rd., Anping Dist., Tainan City 708</address></p>
+
+  </section>
+
+  <footer>
+    <p>&copy; 2023 Shining Hotel. All rights reserved.</p>
+    <p>Designed by Wu Yu Ju.</p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "shining-hotel-booking-site",
+  "version": "1.0.0",
+  "description": "Shining Hotel 民宿訂房網站(顧客端)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mssql": "^10.0.1"
+  }
+}
