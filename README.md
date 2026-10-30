@@ -2,8 +2,6 @@
 
 民宿線上訂房系統，包含**顧客端訂房網站**與**民宿後台管理系統**兩部分。顧客可以瀏覽房型與設施、線上訂房並自動計算金額，也能查詢、修改或刪除自己的訂單；管理者登入後台後，可以管理所有顧客資料、訂單與意見回饋。
 
-![首頁](docs/screenshots/01-home.png)
-
 - **前端**：HTML、CSS、JavaScript
 - **後端**：Node.js、Express.js
 - **資料庫**：Microsoft SQL Server(`mssql`套件)
@@ -11,7 +9,11 @@
 
 > 網站原本部署在學校提供的虛擬主機上，目前主機已關閉、網址失效，因此改以下方的Demo影片與畫面截圖呈現。
 
-**Demo影片**：<https://youtu.be/LFsqXCp3b1s>
+## Demo影片
+
+[![Demo影片](docs/demo-thumbnail.png)](https://youtu.be/LFsqXCp3b1s)
+
+點擊上方畫面即可觀看完整操作示範。
 
 ## 功能
 
