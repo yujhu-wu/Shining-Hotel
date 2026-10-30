@@ -13,8 +13,7 @@
 
 [![Demo影片](docs/demo-thumbnail.png)](https://youtu.be/LFsqXCp3b1s)
 
-點擊上方畫面即可觀看完整操作示範，也可以直接跳到各段落：
-
+點擊上方畫面即可觀看完整Demo影片，也可點選下方時間戳記，直接跳到操作示範段落：  
 - [02:50](https://youtu.be/LFsqXCp3b1s?t=170)顧客端訂房網站Demo
 - [06:09](https://youtu.be/LFsqXCp3b1s?t=369)管理員(老闆)後台網站Demo
 
