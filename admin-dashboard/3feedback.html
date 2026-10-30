@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boss - Feedback</title>
+</head>
+<style>
+  body {
+    font-family: 'Georgia', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  header {
+    background-color: #e4b636;
+    color: #fff;
+    padding: 1em;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  nav li {
+    display: inline;
+    margin-right: 10px;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #000000;
+  }
+  
+  body {
+    padding-top: 90px;
+    margin: 0;  
+  }
+
+  nav ul ul {
+   display: none;
+   position: absolute;
+   top: 100%;
+   left: 0;
+   margin-top: 0; 
+   background-color: #eee;
+   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  nav ul li {
+    position: relative;
+  }
+
+  nav ul li:hover > ul {
+    display: block;
+  }
+
+  nav ul ul li {
+    float: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  nav ul ul a {
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    display: block;
+  }
+
+  nav ul ul a:hover {
+    background-color: #f5f5f5;
+  }
+
+  #feedback {
+    text-align: center;
+    padding: 2em 1em;
+  }
+  
+  #feedback h2 {
+    margin-bottom: 10px;
+  }
+
+  footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1em;
+    position: fixed;
+    width: 100%;
+  }
+</style>
+<body>
+
+  <header>
+    <h1><a href="index.html">Shining Hotel - Feedback</a></h1>
+    <nav>
+      <ul>
+        <li><a href="1client.html">客戶資料</a></li>
+        <li><a href="2order.html">訂單管理</a></li>
+        <li><a href="3feedback.html">回饋管理</a></li>
+        <li><a href="#" id="logoutBtn">登出</a></li>
+      </ul>
+    </nav>
+  </header>
+
+    <section id="feedback" class="feedback">
+     <h2>Feedback Management</h2>
+     <p>此為<b>回饋訊息管理頁面</b>，管理顧客回饋資訊。</p>
+     <div>
+    
+      <label for="searchName">Name:</label>
+      <input type="text" id="searchName" name="searchName">
+      <br>
+      <label for="searchEmail">Email:</label>
+      <input type="text" id="searchEmail" name="searchEmail">
+      <br>
+      <button onclick="searchContacts()">Search Contacts</button>
+      <p> </p>
+    </div>
+    
+    <table id="contactList">
+    </table>
+    
+    <div id="contactDetails">
+    </div>
+    </section>
+
+<footer>
+    <p>&copy; 2023 Shining Hotel. All rights reserved.</p>
+    <p>Designed by Wu Yu Ju.</p>
+  </footer>
+
+  <script defer>
+    document.addEventListener('DOMContentLoaded', function () {
+    console.log('DOM is loaded.');
+    const username = sessionStorage.getItem('username');
+    console.log('Username:', username);
+    if (!username) {
+      console.log('Redirecting to index.html');
+      window.location.href = 'index.html';
+    }
+  });
+
+  // 僅搜尋 name 和 email
+  async function searchContacts() {
+    const searchName = document.getElementById('searchName').value;
+    const searchEmail = document.getElementById('searchEmail').value;
+
+    try {
+      // 向後端發送搜尋聯絡人的請求
+      const response = await fetch('/api/searchContacts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: searchName, email: searchEmail }),
+      });
+
+      if (response.ok) {
+        // 解析伺服器返回的 JSON 資料
+        const contacts = await response.json();
+
+        updateContactTable(contacts);
+      } else {
+        alert('Failed to search contacts. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during searching contacts:', error);
+    }
+  }
+
+
+  function updateContactTable(contacts) {
+    const contactTable = document.getElementById('contactList');
+
+    // 清空
+    contactTable.innerHTML = '';
+
+    const tableHeader = document.createElement('tr');
+    tableHeader.innerHTML = '<th>ID</th><th>Submission Time</th><th>Name</th><th>Email</th><th>Message</th><th>Action</th>';
+    contactTable.appendChild(tableHeader);
+
+    // 逐一顯示每個聯絡人的資訊
+    contacts.forEach(contact => {
+      const submissionTime = new Date(contact.submission_time).toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/(\d+)\/(\d+)\/(\d+),/, '$3/$1/$2');
+
+      const contactInfo = document.createElement('tr');
+      contactInfo.innerHTML = `<td>${contact.contact_id}</td><td>${submissionTime}</td><td>${contact.name}</td><td>${contact.email}</td><td>${contact.message}</td><td><button onclick="deleteContact(${contact.contact_id})">Delete</button></td>`;
+      contactTable.appendChild(contactInfo);
+    });
+  }
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      console.log('DOM is loaded.');
+
+      const username = sessionStorage.getItem('username');
+      console.log('Username:', username);
+
+      if (!username) {
+        console.log('Redirecting to index.html');
+        window.location.href = 'index.html';
+      } else {
+        await displayContacts();
+      }
+    });
+
+    async function displayContacts() {
+      try {
+        // 向後端發送獲取聯絡人資訊的請求
+        const response = await fetch('/api/getAllContacts');
+
+        if (response.ok) {
+          const contacts = await response.json();
+
+          const contactTable = document.getElementById('contactList');
+
+          contactTable.innerHTML = '';
+
+          const tableHeader = document.createElement('tr');
+          tableHeader.innerHTML = '<th>ID</th><th>Submission Time</th><th>Name</th><th>Email</th><th>Message</th><th>Action</th>';
+          contactTable.appendChild(tableHeader);
+
+          contacts.forEach(contact => {
+            const submissionTime = new Date(contact.submission_time).toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/(\d+)\/(\d+)\/(\d+),/, '$3/$1/$2');
+
+            const contactInfo = document.createElement('tr');
+            contactInfo.innerHTML = `<td>${contact.contact_id}</td><td>${submissionTime}</td><td>${contact.name}</td><td>${contact.email}</td><td>${contact.message}</td><td><button onclick="deleteContact(${contact.contact_id})">Delete</button></td>`;
+            contactTable.appendChild(contactInfo);
+          });
+        } else {
+          alert('Failed to fetch contact information. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error during fetching contact information:', error);
+      }
+    }
+
+    // 刪除聯絡人
+    async function deleteContact(contactId) {
+      try {
+        // 向後端發送刪除聯絡人的請求
+        const response = await fetch(`/api/deleteContact/${contactId}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          displayContacts();
+          alert('Contact deleted successfully');
+        } else {
+          alert('Failed to delete contact. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error during deleting contact:', error);
+      }
+    }
+  </script>
+
+  <script>
+    document.getElementById('logoutBtn').addEventListener('click', async function() {
+    try {
+      // 向後端發送登出請求
+      const response = await fetch('/adminLogout', {
+        method: 'POST',  
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // 傳登出相關的資訊
+        body: JSON.stringify({}),
+      });
+
+
+      if (response.ok) {
+        // 清除本地存的用戶資訊
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('password');
+
+        alert('Logged out successfully');
+
+        window.location.href = 'index.html';
+      } else {
+        alert('Failed to log out. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  });
+  </script>
+
+</body>
+</html>

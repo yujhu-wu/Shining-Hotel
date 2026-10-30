@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boss - Order</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+  body {
+    font-family: 'Georgia', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  header {
+    background-color: #e4b636;
+    color: #fff;
+    padding: 1em;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  nav li {
+    display: inline;
+    margin-right: 10px;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #000000;
+  }
+  
+  body {
+    padding-top: 90px;
+    margin: 0;  
+  }
+  /* 下拉選單 */
+  nav ul ul {
+   display: none;
+   position: absolute;
+   top: 100%;
+   left: 0;
+   margin-top: 0; 
+   background-color: #eee;
+   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  nav ul li {
+    position: relative;
+  }
+
+  nav ul li:hover > ul {
+    display: block;
+  }
+
+  nav ul ul li {
+    float: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  nav ul ul a {
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    display: block;
+  }
+
+  nav ul ul a:hover {
+    background-color: #f5f5f5;
+  }
+
+  #order {
+    text-align: center;
+    padding: 2em 1em;
+  }
+  
+  #order h2 {
+    margin-bottom: 10px;
+  }
+
+  footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1em;
+    position: fixed;
+    width: 100%;
+  }
+</style>
+<body>
+
+  <header>
+    <h1><a href="index.html">Shining Hotel - Order</a></h1>
+    <nav>
+      <ul>
+        <li><a href="1client.html">客戶資料</a></li>
+        <li><a href="2order.html">訂單管理</a></li>
+        <li><a href="3feedback.html">回饋管理</a></li>
+        <li><a href="#" id="logoutBtn">登出</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="order" class="order">
+    <h2>Order Management</h2>
+    <p>此為<b>訂單資訊管理頁面</b>，管理顧客訂單資訊。</p>
+    <div>
+      <label for="searchID">ID:</label>
+      <input type="number" id="searchID" name="searchID">
+      <br>
+      <label for="searchCheckInDate">Check-in Date:</label>
+      <input type="date" id="searchCheckInDate" name="searchCheckInDate">
+      <br>
+      <label for="searchCheckOutDate">Check-out Date:</label>
+      <input type="date" id="searchCheckOutDate" name="searchCheckOutDate">
+      <br>
+      <label for="searchRoomNumber">Room Number:</label>
+      <select id="searchRoomNumber">
+        <option value="">Select Room</option>
+        <option value="301">301</option>
+        <option value="302">302</option>
+        <option value="303">303</option>
+        <option value="304">304</option>
+        <option value="305">305</option>
+      </select>
+      <br>
+      <label for="searchPaymentStatus">Payment Status:</label>
+      <select id="searchPaymentStatus" name="searchPaymentStatus">
+        <option value="">All</option>
+        <option value="undone">Undone</option>
+        <option value="finished">finished</option>
+      </select>
+      <br>
+      <button onclick="searchReservations()">Search Reservations</button>
+      <p> </p>
+      <div id="editForm" style="display:none;">
+        <label for="updateId">ID:</label>
+        <input type="text" id="updateId" name="updateId" readonly>
+        <br>
+        <label for="updateCheckInDate">Check-in Date:</label>
+        <input type="date" id="updateCheckInDate" name="updateCheckInDate">
+        <br>
+        <label for="updateCheckOutDate">Check-out Date:</label>
+        <input type="date" id="updateCheckOutDate" name="updateCheckOutDate">
+        <br>
+        <label for="updateGuestCount">Guest Count:</label>
+        <input type="text" id="updateGuestCount" name="updateGuestCount">
+        <br>
+         <label for="updateRoomNumber">Room Number:</label>
+        <select id="updateRoomNumber" name="updateRoomNumber">
+          <option value="301">301</option>
+          <option value="302">302</option>
+          <option value="303">303</option>
+          <option value="304">304</option>
+          <option value="305">305</option>
+        </select>
+        <br>
+        <label for="updateTotalPrice">Total Price:</label>
+        <input type="text" id="updateTotalPrice" name="updateTotalPrice" readonly>
+        <br>
+        <label for="updateBank">Bank:</label>
+        <input type="text" id="updateBank" name="updateBank">
+        <br>
+        <label for="updateAccountNumber">Account Number:</label>
+        <input type="text" id="updateAccountNumber" name="updateAccountNumber">
+        <br>
+        <label for="updatePaymentStatus">Payment Status:</label>
+        <select id="updatePaymentStatus" name="updatePaymentStatus">
+          <option value="undone">Undone</option>
+          <option value="finished">Finished</option>
+        </select>
+        <br>
+        <button onclick="updateReservation()">Update Reservation</button>
+        <p> </p>
+     </div> 
+
+    <table id="reservationList">
+    </table>
+
+    <div id="reservationDetails">
+    </div>
+  </section>
+
+
+<footer>
+    <p>&copy; 2023 Shining Hotel. All rights reserved.</p>
+    <p>Designed by Wu Yu Ju.</p>
+  </footer>
+
+  <script defer>
+    document.addEventListener('DOMContentLoaded', async function () {
+    console.log('DOM is loaded.');
+    const username = sessionStorage.getItem('username');
+    console.log('Username:', username);
+    if (!username) {
+      console.log('Redirecting to index.html');
+      window.location.href = 'index.html';
+    }else{
+      await displayReservations();
+    }
+  });
+
+  // 搜尋訂單
+  async function searchReservations() {
+    const searchID = document.getElementById('searchID').value;
+    const searchCheckInDate = document.getElementById('searchCheckInDate').value;
+    const searchCheckOutDate = document.getElementById('searchCheckOutDate').value;
+    const searchRoomNumber = document.getElementById('searchRoomNumber').value;
+    const searchPaymentStatus = document.getElementById('searchPaymentStatus').value;
+
+    try {
+      // 向後端發送搜尋訂單的請求
+      const response = await fetch('/api/searchReservations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ID: searchID, checkInDate: searchCheckInDate, checkOutDate: searchCheckOutDate, roomNumber: searchRoomNumber, paymentStatus: searchPaymentStatus }),
+      });
+
+      if (response.ok) {
+        // 解析伺服器返回的 JSON 資料
+        const reservations = await response.json();
+
+        updateReservationTable(reservations);
+      } else {
+        alert('Failed to search reservations. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during searching reservations:', error);
+    }
+  }
+
+
+  function updateReservationTable(reservations) {
+      const reservationTable = document.getElementById('reservationList');
+
+      // 清空表格內容
+      reservationTable.innerHTML = '';
+
+      // 創建表頭
+      const tableHeader = document.createElement('tr');
+      tableHeader.innerHTML = '<th>ID</th><th>Check-in Date</th><th>Check-out Date</th><th>Guests Count</th><th>Room Number</th><th>Total Price</th><th>Bank</th><th>Account Number</th><th>Payment Status</th><th>Action</th>';
+      reservationTable.appendChild(tableHeader);
+
+      // 逐一顯示每個訂單的資訊
+      reservations.forEach(reservation => {
+          const reservationInfo = document.createElement('tr');
+          reservationInfo.innerHTML = `<td>${reservation.reservation_id}</td><td>${formatDate(reservation.check_in_date)}</td><td>${formatDate(reservation.check_out_date)}</td><td>${reservation.guests_count}</td><td>${reservation.room_number}</td><td>${reservation.total_price}</td><td>${reservation.bank}</td><td>${reservation.account_number}</td><td>${reservation.payment_status}</td><td><button onclick="editReservation(${reservation.reservation_id}, '${reservation.check_in_date}', '${reservation.check_out_date}', '${reservation.guests_count}', '${reservation.room_number}', '${reservation.total_price}', '${reservation.bank}', '${reservation.account_number}', '${reservation.payment_status}')">Edit</button><button onclick="deleteReservation(${reservation.reservation_id})">Delete</button></td>`;
+
+          // 將 data-column-name 設置在每個 td 元素上
+          reservationInfo.querySelectorAll('td').forEach(td => {
+              td.dataset.columnName = td.getAttribute('data-column-name');
+          });
+
+          reservationTable.appendChild(reservationInfo);
+      });
+  }
+  </script>
+
+  <script defer>
+  async function displayReservations() {
+        try {
+            const response = await fetch('/api/getAllReservations');
+            if (response.ok) {
+                const reservations = await response.json();
+                const reservationTable = document.getElementById('reservationList');
+                reservationTable.innerHTML = '';
+
+                const tableHeader = document.createElement('tr');
+                tableHeader.innerHTML = '<th>ID</th><th>Check-in Date</th><th>Check-out Date</th><th>Guests Count</th><th>Room Number</th><th>Total Price</th><th>Bank</th><th>Account Number</th><th>Payment Status</th><th>Action</th>';
+                reservationTable.appendChild(tableHeader);
+
+                reservations.forEach(reservation => {
+                    const reservationInfo = document.createElement('tr');
+                    reservationInfo.innerHTML = `<td>${reservation.reservation_id}</td><td>${formatDate(reservation.check_in_date)}</td><td>${formatDate(reservation.check_out_date)}</td><td>${reservation.guests_count}</td><td>${reservation.room_number}</td><td>${reservation.total_price}</td><td>${reservation.bank}</td><td>${reservation.account_number}</td><td>${reservation.payment_status}</td><td><button onclick="editReservation(${reservation.reservation_id}, '${reservation.check_in_date}', '${reservation.check_out_date}', '${reservation.guests_count}', '${reservation.room_number}', '${reservation.total_price}', '${reservation.bank}', '${reservation.account_number}', '${reservation.payment_status}')">Edit</button><button onclick="deleteReservation(${reservation.reservation_id})">Delete</button></td>`;
+                    reservationTable.appendChild(reservationInfo);
+                });
+            } else {
+                alert('Failed to fetch reservation information. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error during fetching reservation information:', error);
+        }
+    }
+
+    // 格式化日期，僅顯示日期部分
+    function formatDate(dateString) {
+        const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+        const date = new Date(dateString);
+        return date.toLocaleDateString(undefined, options);
+    }
+
+    // 填充修改表單的資料
+    function editReservation(reservationId, checkInDate, checkOutDate, guestsCount, roomNumber, totalPrice, bank, accountNumber, paymentStatus) {
+        document.getElementById('updateId').value = reservationId;
+        document.getElementById('updateCheckInDate').value = checkInDate;
+        document.getElementById('updateCheckOutDate').value = checkOutDate;
+        // 設定原始日期屬性
+        document.getElementById('updateCheckInDate').setAttribute('data-original-date', checkInDate);
+        document.getElementById('updateCheckOutDate').setAttribute('data-original-date', checkOutDate);
+        document.getElementById('updateGuestCount').value = guestsCount;
+        document.getElementById('updateRoomNumber').value = roomNumber;
+        
+        // 計算 total price
+        const daysDifference = Math.ceil((new Date(checkOutDate) - new Date(checkInDate)) / (1000 * 60 * 60 * 24));
+        let updatedTotalPrice;
+        if (roomNumber === '303' || roomNumber === '305') {
+          updatedTotalPrice = daysDifference * 10000;
+        } else {
+          updatedTotalPrice = daysDifference * 9000;
+        }
+
+        document.getElementById('updateTotalPrice').value = totalPrice; 
+        document.getElementById('updateBank').value = bank;
+        document.getElementById('updateAccountNumber').value = accountNumber;
+        document.getElementById('updatePaymentStatus').value = paymentStatus;
+
+        document.getElementById('editForm').style.display = 'block';
+    }
+
+
+  async function updateReservation() {
+    try {
+      // 獲取修改表單中的資料
+      const updateId = document.getElementById('updateId').value;
+      const updateCheckInDateInput = document.getElementById('updateCheckInDate');
+      const updateCheckOutDateInput = document.getElementById('updateCheckOutDate');
+      const updateRoomNumber = document.getElementById('updateRoomNumber').value;
+      const updatePaymentStatus = document.getElementById('updatePaymentStatus').value;
+
+      // 使用原始表單日期作為初始值
+      const originalCheckInDate = updateCheckInDateInput.getAttribute('data-original-date');
+      const originalCheckOutDate = updateCheckOutDateInput.getAttribute('data-original-date');
+
+      const updateCheckInDate = updateCheckInDateInput.value.trim() !== '' ? updateCheckInDateInput.value : originalCheckInDate;
+      const updateCheckOutDate = updateCheckOutDateInput.value.trim() !== '' ? updateCheckOutDateInput.value : originalCheckOutDate;
+
+      // 向後端發送更新訂單資訊的請求
+      const response = await fetch(`/api/updateReservation/${updateId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          checkInDate: updateCheckInDate,
+          checkOutDate: updateCheckOutDate,
+          roomNumber: updateRoomNumber,
+          paymentStatus: updatePaymentStatus,
+        }),
+      });
+
+      if (response.ok) {
+        displayReservations();
+        document.getElementById('editForm').style.display = 'none';
+        alert('Reservation updated successfully');
+      } else {
+        alert('Failed to update reservation. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during updating reservation:', error);
+      alert('An error occurred during the update. Please try again.');
+    }
+  }
+
+
+    function closeEditForm() {
+        document.getElementById('editForm').style.display = 'none';
+    }
+  </script>
+
+  <script>
+  // 刪除訂單
+  async function deleteReservation(reservationId) {
+    try {
+      // 向後端發送刪除訂單的請求
+      const response = await fetch(`/api/deleteReservation/${reservationId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        displayReservations();
+        alert('Reservation deleted successfully');
+      } else {
+        alert('Failed to delete reservation. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during deleting reservation:', error);
+    }
+  }
+  </script>
+
+  <script>
+    document.getElementById('logoutBtn').addEventListener('click', async function() {
+    try {
+      // 向後端發送登出請求
+      const response = await fetch('/adminLogout', {
+        method: 'POST',  
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // 傳遞登出相關的資訊
+        body: JSON.stringify({}),
+      });
+
+      if (response.ok) {
+        // 清除本地存的用戶資訊
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('password');
+
+        alert('Logged out successfully');
+
+        window.location.href = 'index.html';
+      } else {
+        alert('Failed to log out. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+
+    }
+  });
+  </script> 
+
+</body>
+</html>

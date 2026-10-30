@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boss - Client</title>
+</head>
+<style>
+  body {
+    font-family: 'Georgia', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  header {
+    background-color: #e4b636;
+    color: #fff;
+    padding: 1em;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  nav li {
+    display: inline;
+    margin-right: 10px;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #000000;
+  }
+  
+  body {
+    padding-top: 90px;
+    margin: 0;  
+  }
+  /* 下拉選單 */
+  nav ul ul {
+   display: none;
+   position: absolute;
+   top: 100%;
+   left: 0;
+   margin-top: 0; 
+   background-color: #eee;
+   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  nav ul li {
+    position: relative;
+  }
+
+  nav ul li:hover > ul {
+    display: block;
+  }
+
+  nav ul ul li {
+    float: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  nav ul ul a {
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    display: block;
+  }
+
+  nav ul ul a:hover {
+    background-color: #f5f5f5;
+  }
+
+  #client {
+    text-align: center;
+    padding: 2em 1em;
+  }
+  
+  #client h2 {
+    margin-bottom: 10px;
+  }
+  
+
+  footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1em;
+    position: fixed;
+    width: 100%;
+  }
+</style>
+<body>
+
+  <header>
+    <h1><a href="index.html">Shining Hotel - Client</a></h1>
+    <nav>
+      <ul>
+        <li><a href="1client.html">客戶資料</a></li>
+        <li><a href="2order.html">訂單管理</a></li>
+        <li><a href="3feedback.html">回饋管理</a></li>
+        <li><a href="#" id="logoutBtn">登出</a></li>
+      </ul>
+    </nav>
+  </header>
+
+    <section id="client" class="client">
+     <h2>Client Management</h2>
+     <p>此為<b>客戶資訊管理頁面</b>，管理顧客資訊。</p>
+     <div>
+      <label for="searchID"> ID:</label>
+      <input type="number" id="searchID" name="searchID">
+      <br>
+      <label for="searchName">Name:</label>
+      <input type="text" id="searchName" name="searchName">
+      <br>
+      <label for="searchPhone">Phone:</label>
+      <input type="text" id="searchPhone" name="searchPhone">
+      <br>
+      <label for="searchEmail">Email:</label>
+      <input type="text" id="searchEmail" name="searchEmail">
+      <br>
+      <button onclick="searchGuests()">Search Guests</button>
+      <p> </p>
+    </div>
+    /* 新增修改客戶資訊的表單 */
+    <div id="editForm" style="display:none;">
+      <label for="updateId">ID:</label>
+      <input type="text" id="updateId" name="updateId" readonly>
+      <br>
+      <label for="updateName">Name:</label>
+      <input type="text" id="updateName" name="updateName">
+      <br>
+      <label for="updatePhone">Contact Phone:</label>
+      <input type="text" id="updatePhone" name="updatePhone">
+      <br>
+      <label for="updateEmail">Email:</label>
+      <input type="text" id="updateEmail" name="updateEmail">
+      <br>
+      <button onclick="updateGuest()">Update Guest</button>
+      <p> </p>
+    </div>
+    <table id="guestList">
+    </table>
+    
+     <div id="guestList">
+    </div>
+    </section>
+
+<footer>
+    <p>&copy; 2023 Shining Hotel. All rights reserved.</p>
+    <p>Designed by Wu Yu Ju.</p>
+  </footer>
+
+  <script defer>
+    document.addEventListener('DOMContentLoaded', async function () {
+    console.log('DOM is loaded.');
+    const username = sessionStorage.getItem('username');
+    console.log('Username:', username);
+    if (!username) {
+      console.log('Redirecting to index.html');
+      window.location.href = 'index.html';
+    }else{
+      await displayGuests();
+    }
+  });
+
+  // 搜尋客戶
+  async function searchGuests() {
+    const searchID = document.getElementById('searchID').value;
+    const searchName = document.getElementById('searchName').value;
+    const searchPhone = document.getElementById('searchPhone').value;
+    const searchEmail = document.getElementById('searchEmail').value;
+
+    try {
+      // 向後端發送搜尋客戶的請求
+      const response = await fetch('/api/searchGuests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ID: searchID, name: searchName, phone: searchPhone, email: searchEmail }),
+      });
+
+      if (response.ok) {
+        // 解析伺服器返回的 JSON 資料
+        const guests = await response.json();
+
+        updateGuestTable(guests);
+      } else {
+        alert('Failed to search guests. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during searching guests:', error);
+    }
+  }
+
+
+  function updateGuestTable(guests) {
+    const guestTable = document.getElementById('guestList');
+
+    // 清空表格內容
+    guestTable.innerHTML = '';
+
+    // 創建表頭
+    const tableHeader = document.createElement('tr');
+    tableHeader.innerHTML = '<th>ID</th><th>Name</th><th>Contact Phone</th><th>Email</th><th>Action</th>';
+    guestTable.appendChild(tableHeader);
+
+    // 逐一顯示每個顧客的資訊
+    guests.forEach(guest => {
+      const guestInfo = document.createElement('tr');
+      guestInfo.innerHTML = `<td>${guest.guest_id}</td><td>${guest.name}</td><td>${guest.contact_phone}</td><td>${guest.email}</td><td><button onclick="editGuest(${guest.guest_id}, '${guest.name}', '${guest.contact_phone}', '${guest.email}')">Edit</button><button onclick="deleteGuest(${guest.guest_id})">Delete</button></td>`;
+      guestTable.appendChild(guestInfo);
+    });
+  }
+  </script>
+  <script defer>
+  // 獲取並顯示賓客資訊
+  async function displayGuests() {
+    try {
+      const response = await fetch('/api/getAllGuests');
+
+      if (response.ok) {
+        const guests = await response.json();
+
+        const guestTable = document.getElementById('guestList');
+
+        guestTable.innerHTML = '';
+
+        const tableHeader = document.createElement('tr');
+        tableHeader.innerHTML = '<th>ID</th><th>Name</th><th>Contact Phone</th><th>Email</th><th>Action</th>';
+        guestTable.appendChild(tableHeader);
+
+        guests.forEach(guest => {
+          const guestInfo = document.createElement('tr');
+          guestInfo.innerHTML = `<td>${guest.guest_id}</td><td>${guest.name}</td><td>${guest.contact_phone}</td><td>${guest.email}</td><td><button onclick="editGuest(${guest.guest_id}, '${guest.name}', '${guest.contact_phone}', '${guest.email}')">Edit</button><button onclick="deleteGuest(${guest.guest_id})">Delete</button></td>`;
+          guestTable.appendChild(guestInfo);
+        });
+      } else {
+        alert('Failed to fetch guest information. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during fetching guest information:', error);
+    }
+  }
+  
+  // 填修改表單的資料
+  function editGuest(guestId, name, contactPhone, email) {
+    document.getElementById('updateId').value = guestId;
+    document.getElementById('updateName').value = name;
+    document.getElementById('updatePhone').value = contactPhone;
+    document.getElementById('updateEmail').value = email;
+    
+    document.getElementById('editForm').style.display = 'block';
+  }
+
+
+  async function updateGuest() {
+    try {
+      // 獲取修改表單中的資料
+      const updateId = document.getElementById('updateId').value;
+      const updateName = document.getElementById('updateName').value;
+      const updatePhone = document.getElementById('updatePhone').value;
+      const updateEmail = document.getElementById('updateEmail').value;
+
+      // 向後端發送更新顧客資訊的請求
+      const response = await fetch(`/api/updateGuest/${updateId}`, {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              name: updateName,
+              contactPhone: updatePhone,
+              email: updateEmail,
+          }),
+      });
+
+
+      if (response.ok) {
+        displayGuests();
+        document.getElementById('editForm').style.display = 'none';
+        alert('Guest updated successfully');
+      } else {
+        alert('Failed to update guest. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during updating guest:', error);
+    }
+  }
+  </script>
+  <script>
+
+  async function deleteGuest(guestId) {
+    try {
+      const response = await fetch(`/api/deleteGuest/${guestId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        displayGuests();
+        alert('Guest deleted successfully');
+      } else {
+        alert('Failed to delete guest. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during deleting guest:', error);
+    }
+  }
+
+  </script>
+
+  <script>
+    document.getElementById('logoutBtn').addEventListener('click', async function() {
+    try {
+      // 向後端發送登出請求
+      const response = await fetch('/adminLogout', {
+        method: 'POST',  // 使用 POST 方法
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // 傳遞登出相關的資訊
+        body: JSON.stringify({}),
+      });
+
+
+      if (response.ok) {
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('password');
+
+        alert('Logged out successfully');
+
+        // 回登入頁面
+        window.location.href = 'index.html';
+      } else {
+        alert('Failed to log out. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  });
+  </script>
+  
+</body>
+</html>

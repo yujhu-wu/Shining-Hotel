@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login</title>
+</head>
+<style>
+  body {
+    font-family: 'Georgia', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  header {
+    background-color: #e4b636;
+    color: #fff;
+    padding: 1em;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  nav li {
+    display: inline;
+    margin-right: 10px;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #000000;
+  }
+  
+  body {
+    padding-top: 90px;
+    margin: 0;  
+  }
+
+  nav ul ul {
+   display: none;
+   position: absolute;
+   top: 100%;
+   left: 0;
+   margin-top: 0; 
+   background-color: #eee;
+   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  nav ul li {
+    position: relative;
+  }
+
+  nav ul li:hover > ul {
+    display: block;
+  }
+
+  nav ul ul li {
+    float: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  nav ul ul a {
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    display: block;
+  }
+
+  nav ul ul a:hover {
+    background-color: #f5f5f5;
+  }
+  
+  #login {
+    color: rgb(94, 120, 200);
+    text-align: center;
+    padding: 2em 1em;
+  }
+  
+  #login h2 {
+    margin-bottom: 10px;
+    padding: 1em 0.5em;
+  }
+  
+  #login form {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  #login label,
+  #login input,
+  #login textarea {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  #login button {
+    display: inline-block;
+    padding: 15px 30px;
+    margin-top: 20px;
+    background-color: #e4b636;
+    color: #000000;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 20px;
+  }
+  
+  #login button:hover {
+    background-color:#000000;
+    color: #e4b636;
+    transition: 0.7s;
+  }
+  footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1em;
+  }
+</style>
+<script>
+  async function validateLogin() {
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+
+    try {
+      const response = await fetch('/adminLogin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        sessionStorage.setItem('username', username);
+        window.location.href = "1client.html"; // 登入成功，到成功頁面
+      } else {
+        window.location.href = "login-error.html"; // 登入失敗，到錯誤頁面
+      }
+    } catch (error) {
+      console.error('Error during login validation:', error);
+      window.location.href = "login-error.html"; // 發生錯誤，錯誤頁面
+    }
+  }
+</script>
+
+<body>
+
+  <header>
+    <h1><a href="index.html">Shining Hotel - Boss Login</a></h1>
+  </header>
+
+    <section id="login" class="login">
+     <h2>Boss Login</h2>
+     <p><b>Backend management login.</b></p>
+     <p><b>請輸入管理者帳號密碼</b></p>
+     <form onsubmit="validateLogin(); return false;" class="login-form"> 
+      <label for="username">Username:</label>
+         <input type="text" id="username" name="username" required>
+
+         <label for="password">Password:</label>
+         <input type="password" id="password" name="password" required>
+
+         <button type="submit" name="login" class="btn">Login</button> 
+     </form>
+    </section>
+
+<footer>
+    <p>&copy; 2023 Shining Hotel. All rights reserved.</p>
+    <p>Designed by Wu Yu Ju.</p>
+  </footer>
+  
+
+</body>
+</html>
+
